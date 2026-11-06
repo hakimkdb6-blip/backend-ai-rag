@@ -1,10 +1,11 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
 class Question(BaseModel):
-    texte: str
+    texte: str = Field(min_length=3)
+    langue: str = "fr"
 
 @app.get("/health")
 def health():
@@ -16,4 +17,4 @@ def saluer(nom: str):
 
 @app.post("/question")
 def poser_question(q: Question):
-    return {"reponse": f"Tu as demandé : {q.texte}"}
+    return {"reponse": f"Tu as demandé : {q.texte}", "langue": q.langue}
