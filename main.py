@@ -19,6 +19,7 @@ def health():
 
 @app.post("/notes")
 def creer_note(note: Note):
+    # begin() ouvre une transaction et la valide (commit) à la sortie du bloc.
     with engine.begin() as conn:
         resultat = conn.execute(
             text(
@@ -38,7 +39,8 @@ def lister_notes():
         resultat = conn.execute(
             text("SELECT id, titre, contenu FROM notes ORDER BY id")
         )
-        return [dict(ligne) for ligne in resultat.mappings().all()]
+        lignes = resultat.mappings().all()
+    return [dict(ligne) for ligne in lignes]
 
 
 @app.get("/notes/{note_id}")
